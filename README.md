@@ -1,88 +1,73 @@
 # Chirpify
 
-Chirpify is a Python library that allows a user to import their favorite CHIRP Radio DJ's setlist into a Spotify playlist.
-
-## Getting Started
-
-These instructions will get you up and running on your local machine. 
+Chirpify is a Python library that takes the CHIRP DJ profile setlist and turns it into a Spotify playlist. Just point the CLI at a DJ's profile page on the CHIRP website along with the playlist name and the code will create an entire playlist with every track that DJ has ever played.
 
 ### Prerequisites
 
-Spotify account
-Spotify API Credentials
+Python3 (Python2 will require a couple code changes)
 
+[Spotify account](https://www.spotify.com/us/signup/)
+
+[Spotify API Credentials](https://developer.spotify.com/my-applications/#!/)
+
+BeautifulSoup
 ```
-Give examples
+pip3 install beautifulsoup4
+```
+
+Spotipy
+```
+pip3 install spotipy
+```
+
+Requests
+```
+pip3 install requests
 ```
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
+Clone this repository
 
 ```
-Give the example
+git clone https://github.com/clintmcmahon/chirpify.git
 ```
 
-And repeat
+Change directory to chirpify
 
 ```
-until finished
+cd chirpify
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+Create a local_config.py file and populate with your values. Your file should look like this
 
 ```
-Give an example
+#!/usr/bin/env python
+#encoding: utf-8
+
+SPOTIFY_USERNAME = [your Spotify username]
+SPOTIFY_CLIENT_SECRET = [your Spotify API Client Secret]
+SPOTIFY_CLIENT_ID = [your Spotify API Client ID]
+SPOTIFY_SCOPE = 'playlist-modify-public playlist-modify-private playlist-read-collaborative'
+SPOTIFY_REDIRECT_URI = 'http://localhost'
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
+Run the code
 ```
-Give an example
+python3 main.py [playlistUri] [playlist name (optional)]
+python3 main.py http://chirpradio.org/dj/1967 'Awesome tunes, dude'
 ```
+A browser window will automatically open where you will authenticate with Spotify. After you've given access to your Spotify account the browser will redirect to a http://localhost url. Copy the localhost url and paste it into the command line. You'll only need to do this once, the code will create a cache authentication file on your local machine.
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
+After you've authenticated the program will read the CHIRP profile and either create a new playlist with the given name or append to the playlist if the name already exists.
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+* [Spotify](http://www.spotify.com)
+* [Chirp Radio](http://chirpradio.org)
+* [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/)
+* [Spotipy](https://github.com/plamere/spotipy)
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* Chicago Independent Radio Project - [Donate today!](http://chirpradio.org/donations)
