@@ -11,8 +11,9 @@ class Scrape(object):
     Scrape class scrapes the the CHIRP Radio website
     for a DJs playlist.
     '''
-    def __init__(self, dj_uri):
+    def __init__(self, dj_uri, most_recent=True):
         self.dj_uri = dj_uri
+        self.most_recent = most_recent
     
     def get_tracks(self):
         '''Returns a list of dictionaries 
@@ -44,11 +45,19 @@ class Scrape(object):
         try:
             tracks = []
             uri = self.dj_uri
+            html = self.get_dj_html(uri)
+            soup = BeautifulSoup(html, 'html.parser')
+            seed_table = soup.find('table')
+            seed_table_rows = seed_table.find_all('tr')
+            seed_datetime_raw = seed_table_rows[0].find('td', attrs={'class':'date-heading'})
+            seed_datetime = seed_datetime_raw.text.strip()
+            seed_date = seed_datetime.split('-')[0].strip()
             while uri:
                 html = self.get_dj_html(uri)
                 soup = BeautifulSoup(html, 'html.parser')
                 table = soup.find('table')
                 rows = table.find_all('tr')
+                date_match = True
                 for row in rows:
                     artist = row.find('td', attrs={'class':'artist'})
                     song = row.find('td', attrs={'class':'track'})
@@ -57,12 +66,23 @@ class Scrape(object):
                         tracks.append({'artist': artist.text.strip(),
                                        'song': song.text.strip(),
                                        'album': album.text.strip()})
-                pages = soup.find('ol', attrs={'class':'pagination'})
-                try:
-                    uri = pages.find('a', attrs={'class':'next'})['href']
-                except:
+                    if self.most_recent:
+                        found_datetime_raw = row.find('td', attrs={'class':'date-heading'})
+                        if found_datetime_raw:
+                            found_datetime = found_datetime_raw.text.strip()
+                            found_date = found_datetime.split('-')[0].strip()
+                        if seed_date != found_date:
+                            date_match = False
+                            break
+                if date_match == False:
                     uri = False
-                #time.sleep(random.random())
+                else:
+                    pages = soup.find('ol', attrs={'class':'pagination'})
+                    try:
+                        uri = pages.find('a', attrs={'class':'next'})['href']
+                    except:
+                        uri = False
+                    time.sleep(random.random())
             return tracks
         except self.ScrapeError as e:
             print(e.args)
