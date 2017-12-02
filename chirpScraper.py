@@ -63,7 +63,11 @@ class Scrape(object):
                     song = row.find('td', attrs={'class':'track'})
                     album = row.find('td', attrs={'class':'album'})
                     if artist and song and album:
-                        tracks.append({'artist': artist.text.strip(),
+                        if '<mark>Local</mark>' in str(artist):
+                            artist = artist.text.strip().rstrip('Local')
+                        else:
+                            artist = artist.text.strip()
+                        tracks.append({'artist': artist,
                                        'song': song.text.strip(),
                                        'album': album.text.strip()})
                     if self.most_recent:
