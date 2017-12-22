@@ -54,8 +54,7 @@ SPOTIFY_REDIRECT_URI = 'http://localhost'
 
 Run the code
 ```
-python3 main.py [playlistUri] [playlist name (optional)]
-python3 main.py http://chirpradio.org/dj/1967 'Awesome tunes, dude'
+python3 main.py --uri http://chirpradio.org/dj/XXXX --name 'Awesome tunes' --full (optional, leave off for most recent)
 ```
 A browser window will automatically open where you will authenticate with Spotify. After you've given access to your Spotify account the browser will redirect to a http://localhost url. Copy the localhost url and paste it into the command line. You'll only need to do this once, the code will create a cache authentication file on your local machine.
 
@@ -70,4 +69,4 @@ After you've authenticated the program will read the CHIRP profile and either cr
 
 ## Acknowledgments
 
-* Chicago Independent Radio Project - [Donate today!](http://chirpradio.org/donations)
+* Chicago Independent Radio Project - [Help Keep Great Music Commerical Free And Donate Today!](http://chirpradio.org/donations)
