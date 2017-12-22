@@ -24,22 +24,25 @@ class Spotify(object):
         Creates a Spotify playlist
         '''
         playlist_name = playlist.name
+        playlist_description = playlist.description
         playlist_id = 0
         my_playlists = self.spotify.current_user_playlists()
         
         for i, my_playlist in enumerate(my_playlists['items']):
             if(playlist_name.lower() == my_playlist['name'].lower()):
                 playlist_id = my_playlist['id']
+                self.spotify.user_playlist_change_details(user=self.username, playlist_id=playlist_id, description=playlist_description)
                 print('Using existing playlist', playlist_name)
                 print('Deleting existing tracks from playlist', playlist_name)
                 self.remove_tracks(playlist_id)
                 break
         
         if playlist_id == 0:
-            playlist_id = self.spotify.user_playlist_create(self.username, playlist_name)
+            new_playlist = self.spotify.user_playlist_create(self.username, playlist_name, public=True, description=playlist_description)
+            playlist_id = new_playlist['id']
             print('Created new playlist', playlist_name)
         
-        print ('Building new playlist')
+        print ('Building new playlist with id:', playlist_id)
         for track in playlist.tracks:
             artist = track['artist']
             track = track['song']
