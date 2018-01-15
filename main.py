@@ -27,9 +27,6 @@ def main():
     '''
     Main method
     '''
-    most_recent = True
-    uri = ''
-    playlist_name = 'Chirpify'
 
     # initiate the parser
     parser = argparse.ArgumentParser(description="Scrapes a DJ's playlist from the CHIRP radio \
@@ -43,6 +40,7 @@ def main():
 
     uri = args.uri
     playlist_name = args.name
+    most_recent = args.full
 
     worker_b(uri, playlist_name, most_recent)
     
