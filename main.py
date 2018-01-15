@@ -9,11 +9,10 @@ from playlist import Playlist
 import json
 import argparse
 
-def main(uri, playlist_name, most_recent):
-    '''
-    Main method
-    '''
 
+def worker_b(uri, playlist_name, most_recent):
+    '''Creates objects and does the real work
+    '''
     scrape = Scrape(uri, most_recent)
     tracks = scrape.get_tracks()
     
@@ -24,29 +23,29 @@ def main(uri, playlist_name, most_recent):
     playlist.description = 'Not implemented yet'
     playlist_id = spotify.create_playlist(playlist)
 
-if __name__ == '__main__':
+def main():
+    '''
+    Main method
+    '''
     most_recent = True
     uri = ''
     playlist_name = 'Chirpify'
 
     # initiate the parser
-    parser = argparse.ArgumentParser()  
-    parser.add_argument('-U', '--uri', help='set the dj profile url')
-    parser.add_argument('-N', '--name', help='set the name of the playlist')
-    parser.add_argument('-F', '--full', help='download the full dj playlist archive', action='store_true')
+    parser = argparse.ArgumentParser(description="Scrapes a DJ's playlist from the CHIRP radio \
+                                                 (http://chirpradio.org/) and creates a Spotify playlist form it.")  
+    parser.add_argument('-U', '--uri', required=True, help='set the dj profile url')
+    parser.add_argument('-N', '--name', required=True, help='set the name of the playlist')
+    parser.add_argument('-F', '--full', help='download the full dj playlist archive', action='store_false')
 
     # read arguments from the command line
     args = parser.parse_args()
 
-    if args.uri:
-        uri = args.uri
-    else:
-        print ('Whoops, need a playlist uri!')
-        print ('usage: python3 main.py --uri http://chirpradio.org/dj/XXXX')
-        sys.exit()
-    if args.name:
-        playlist_name = args.name
-    if args.full:  
-        most_recent = False
+    uri = args.uri
+    playlist_name = args.name
 
-    main(uri, playlist_name, most_recent)
+    worker_b(uri, playlist_name, most_recent)
+    
+
+if __name__ == '__main__':
+    main()
